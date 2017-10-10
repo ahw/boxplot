@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.box {
+  font: 10px sans-serif;
+}
+
+.box line,
+.box rect,
+.box circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.box .center {
+  stroke-dasharray: 3,3;
+}
+
+.box .outlier {
+  fill: none;
+  stroke: #ccc;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="box.js"></script>
+<script>
+
+var margin = {top: 10, right: 50, bottom: 20, left: 50},
+    width = 120 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var min = Infinity,
+    max = -Infinity;
+
+var chart = d3.box()
+    .whiskers(iqr(1.5))
+    .width(width)
+    .height(height);
+
+const xhr = new XMLHttpRequest();
+xhr.open('GET', 'experiments.log');
+xhr.onload = function() {
+    const data = {};
+    const lines = xhr.responseText.split('\n');
+    let min = Infinity;
+    let max = -Infinity;
+    lines.forEach(line => {
+        try {
+            const { experiment, treatment, value } = JSON.parse(line);
+            if (typeof data[experiment] === 'undefined') {
+                data[experiment] = {};
+            }
+
+            if (typeof data[experiment][treatment] === 'undefined') {
+                data[experiment][treatment] = [];
+            }
+
+            data[experiment][treatment].push(value);
+            max = Math.max(max, value);
+            min = Math.min(min, value);
+        } catch (e) {
+        }
+    });
+
+    const chartData = [];
+    let chartIndex = 0;
+    Object.keys(data).forEach((experiment, expIndex, expArr) => {
+        Object.keys(data[experiment]).forEach((treatment, treatIndex, treatArr) => {
+            chartData[chartIndex] = data[experiment][treatment];
+            ++chartIndex;
+        });
+    });
+
+    console.log(data);
+    console.log(chartData);
+    console.log(min, max);
+    chart.domain([min, max]);
+
+    var svg = d3.select("body").selectAll("svg")
+        .data(chartData)
+      .enter().append("svg")
+        .attr("class", "box")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.bottom + margin.top)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(chart);
+};
+xhr.send();
+
+/*
+d3.csv("morley.csv", function(error, csv) {
+    if (error) throw error;
+
+    const data = [];
+
+    csv.forEach(function(line) {
+        var e = Math.floor(line.Expt - 1),
+            r = Math.floor(line.Run - 1),
+            s = Math.floor(line.Speed),
+            d = data[e];
+        if (!d) {
+            d = data[e] = [s];
+        } else {
+            d.push(s);
+        }
+        if (s > max) max = s;
+        if (s < min) min = s;
+  });
+
+  chart.domain([min, max]);
+
+  console.log(data);
+  var svg = d3.select("body").selectAll("svg")
+      .data(data)
+    .enter().append("svg")
+      .attr("class", "box")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.bottom + margin.top)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .call(chart);
+
+});
+*/
+
+// Returns a function to compute the interquartile range.
+function iqr(k) {
+  return function(d, i) {
+    var q1 = d.quartiles[0],
+        q3 = d.quartiles[2],
+        iqr = (q3 - q1) * k,
+        i = -1,
+        j = d.length;
+    while (d[++i] < q1 - iqr);
+    while (d[--j] > q3 + iqr);
+    return [i, j];
+  };
+}
+
+</script>
