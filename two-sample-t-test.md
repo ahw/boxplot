@@ -43,5 +43,6 @@ Source: http://simon.cs.vt.edu/SoSci/converted/T-Dist/
 3. **Sample standard deviation _s_**
 4. **Standard error of the difference**
 5. **Observed independent samples t-value**
-6. Look up the t-value to find the p-value, which gives the probability that the two samples would have the difference of means that was observed.
+6. Degrees of freedom **df**. If equal variances are assumed, then **df = N1 + N2 - 2**
+7. Look up the t-value to find the p-value, which gives the probability that the two samples would have the difference of means that was observed.
     
