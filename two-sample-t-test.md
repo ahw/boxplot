@@ -1,3 +1,16 @@
+# Sample standard deviation
+
+![Sample standard deviation](https://wikimedia.org/api/rest_v1/media/math/render/svg/00eb0cde84f0a838a2de6db9f382866427aeb3bf)
+
+Dividing by **N - 1** accounts for the fact that this is a sample of values drawn from a population.
+
+# t-distribution
+
+> The standard error is the standard deviation of the sample mean. It is important to understand that standard error is not the standard deviation for the values of the population, nor is it the standard deviation for the values of the sample. Rather, standard error is a measure of the error that we expect to find in the value obtained for the sample mean. For a given size N, there are many different samples of that size that can be drawn from the population. Each such sample of size N has a mean. It is the distribution of these sample means, and thus a measure of the error for any one of those means, that is being described by the term "standard error." Of course, we only have one sample, and so one sample mean. The standard error for this mean can be estimated using the standard deviation for the values of the sample.
+>
+> #### Standard Error of the Sample Mean
+> ![Standard error of the sample mean](http://simon.cs.vt.edu/SoSci/converted/T-Dist/stdError.gif)
+
 # Independent Samples t-Test
 
 > While the single sample t-test is easiest to understand, it is rarely used in practice. That's because researchers don't often have a population mean to compare against an observed sample mean. A more common situation is to compare two different samples of subjects in order to decide if they come from the same population.
@@ -22,3 +35,13 @@
 > ![Observed independent samples t-value](http://simon.cs.vt.edu/SoSci/converted/T-Dist/tScoreDiffNull.gif)
 
 Source: http://simon.cs.vt.edu/SoSci/converted/T-Dist/
+
+# Steps
+
+1. Sample size **N** (trivial) for each sample
+2. **mean** for each sample
+3. **Sample standard deviation _s_**
+4. **Standard error of the difference**
+5. **Observed independent samples t-value**
+6. Look up the t-value to find the p-value, which gives the probability that the two samples would have the difference of means that was observed.
+    
